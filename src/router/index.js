@@ -54,6 +54,11 @@ const routes = [
         component: () => import('@/views/TimeTrackingView.vue')
       },
       {
+        path: 'tickets',
+        name: 'Tickets',
+        component: () => import('@/views/TicketsView.vue')
+      },
+      {
         path: 'settings',
         name: 'Settings',
         component: () => import('@/views/SettingsView.vue')

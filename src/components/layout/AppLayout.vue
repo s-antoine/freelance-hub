@@ -21,7 +21,7 @@
             ? 'bg-indigo-50 text-indigo-700'
             : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
         >
-          <component :is="item.icon" class="w-5 h-5 flex-shrink-0" />
+          <span class="text-base">{{ item.emoji }}</span>
           {{ item.label }}
         </RouterLink>
       </nav>
@@ -41,7 +41,7 @@
           @click="handleSignOut"
           class="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
         >
-          <ArrowRightOnRectangleIcon class="w-4 h-4" />
+          <span>🚪</span>
           Se déconnecter
         </button>
       </div>
@@ -58,29 +58,20 @@
 import { computed } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import {
-  HomeIcon,
-  UsersIcon,
-  FolderIcon,
-  DocumentTextIcon,
-  CurrencyEuroIcon,
-  ClockIcon,
-  Cog6ToothIcon,
-  ArrowRightOnRectangleIcon
-} from '@heroicons/vue/24/outline'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: HomeIcon },
-  { to: '/clients', label: 'Clients', icon: UsersIcon },
-  { to: '/projects', label: 'Projets', icon: FolderIcon },
-  { to: '/invoices', label: 'Factures', icon: DocumentTextIcon },
-  { to: '/accounting', label: 'Comptabilité', icon: CurrencyEuroIcon },
-  { to: '/time-tracking', label: 'Time Tracking', icon: ClockIcon },
-  { to: '/settings', label: 'Paramètres', icon: Cog6ToothIcon },
+  { to: '/', label: 'Dashboard', emoji: '📊' },
+  { to: '/clients', label: 'Clients', emoji: '👥' },
+  { to: '/projects', label: 'Projets', emoji: '📁' },
+  { to: '/invoices', label: 'Factures', emoji: '🧾' },
+  { to: '/accounting', label: 'Comptabilité', emoji: '💰' },
+  { to: '/time-tracking', label: 'Time Tracking', emoji: '⏱️' },
+  { to: '/tickets', label: 'Tickets', emoji: '🎫' },
+  { to: '/settings', label: 'Paramètres', emoji: '⚙️' },
 ]
 
 const userEmail = computed(() => authStore.user?.email ?? '')
