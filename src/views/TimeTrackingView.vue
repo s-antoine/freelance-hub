@@ -1,29 +1,30 @@
 <template>
   <div class="p-4 md:p-8">
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex items-start justify-between gap-3 mb-6">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Time Tracking</h1>
         <p class="text-gray-500 mt-1">Suivez votre temps par projet</p>
       </div>
-      <button @click="showModal = true" class="btn-primary">
+      <button @click="showModal = true" class="btn-primary shrink-0">
         <PlusIcon class="w-4 h-4" />
-        Ajouter une entrée
+        <span class="hidden sm:inline">Ajouter une entrée</span>
+        <span class="sm:hidden">Ajouter</span>
       </button>
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white rounded-2xl border border-gray-200 p-6">
-        <p class="text-sm text-gray-500 mb-1">Cette semaine</p>
-        <p class="text-2xl font-bold text-indigo-600">{{ weeklyHours }}h</p>
+    <div class="grid grid-cols-3 gap-3 md:gap-6 mb-8">
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 md:p-6">
+        <p class="text-xs md:text-sm text-gray-500 mb-1">Cette semaine</p>
+        <p class="text-xl md:text-2xl font-bold text-indigo-600">{{ weeklyHours }}h</p>
       </div>
-      <div class="bg-white rounded-2xl border border-gray-200 p-6">
-        <p class="text-sm text-gray-500 mb-1">Ce mois</p>
-        <p class="text-2xl font-bold text-gray-900">{{ monthlyHours }}h</p>
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 md:p-6">
+        <p class="text-xs md:text-sm text-gray-500 mb-1">Ce mois</p>
+        <p class="text-xl md:text-2xl font-bold text-gray-900">{{ monthlyHours }}h</p>
       </div>
-      <div class="bg-white rounded-2xl border border-gray-200 p-6">
-        <p class="text-sm text-gray-500 mb-1">Total heures</p>
-        <p class="text-2xl font-bold text-gray-900">{{ totalHours }}h</p>
+      <div class="bg-white rounded-2xl border border-gray-200 p-4 md:p-6">
+        <p class="text-xs md:text-sm text-gray-500 mb-1">Total</p>
+        <p class="text-xl md:text-2xl font-bold text-gray-900">{{ totalHours }}h</p>
       </div>
     </div>
 
@@ -36,7 +37,32 @@
         <ClockIcon class="w-10 h-10 mx-auto mb-3 opacity-40" />
         <p>Aucune entrée de temps</p>
       </div>
-      <table v-else class="w-full">
+
+      <!-- Vue mobile : cards -->
+      <div v-else class="md:hidden divide-y divide-gray-100">
+        <div
+          v-for="entry in entries"
+          :key="entry.id"
+          class="flex items-center gap-3 px-4 py-3"
+        >
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-0.5">
+              <p class="text-sm font-semibold text-gray-900 truncate">{{ entry.project?.name || 'Sans projet' }}</p>
+              <span class="text-sm font-bold text-indigo-600 shrink-0 ml-2">{{ entry.hours }}h</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-400">{{ formatDate(entry.date) }}</span>
+              <span v-if="entry.description" class="text-xs text-gray-500 truncate">· {{ entry.description }}</span>
+            </div>
+          </div>
+          <button @click="deleteEntry(entry.id)" class="p-1.5 text-gray-400 hover:text-red-600 shrink-0">
+            <TrashIcon class="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Vue desktop : table -->
+      <table v-if="entries.length > 0" class="hidden md:table w-full">
         <thead class="bg-gray-50 border-b border-gray-200">
           <tr>
             <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Date</th>
@@ -63,8 +89,9 @@
     </div>
 
     <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl w-full max-w-md p-6">
+    <div v-if="showModal" class="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+      <div class="bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-md p-6 max-h-[90vh] overflow-y-auto">
+        <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-4 sm:hidden"></div>
         <h2 class="text-lg font-semibold text-gray-900 mb-6">Nouvelle entrée de temps</h2>
         <form @submit.prevent="handleSubmit" class="space-y-4">
           <div>

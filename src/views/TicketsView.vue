@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 md:p-8">
-    <div class="flex items-center justify-between mb-8">
+    <div class="flex items-start justify-between gap-3 mb-6">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Tickets</h1>
         <p class="text-gray-500 mt-1">Suivi des demandes clients</p>
@@ -14,7 +14,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="flex gap-3 mb-6">
+    <div class="flex flex-wrap gap-2 mb-6">
       <button
         v-for="f in filters"
         :key="f.value"
