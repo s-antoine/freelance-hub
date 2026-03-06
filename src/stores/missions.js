@@ -16,12 +16,16 @@ export const useMissionsStore = defineStore('missions', () => {
   }
 
   async function saveSource(source) {
+    const { data: { user } } = await supabase.auth.getUser()
     if (source.id) {
       const { data } = await supabase.from('mission_sources').update(source).eq('id', source.id).select().single()
       const i = sources.value.findIndex(s => s.id === source.id)
       if (i !== -1) sources.value[i] = data
     } else {
-      const { data } = await supabase.from('mission_sources').insert(source).select().single()
+      const { data, error } = await supabase.from('mission_sources')
+        .insert({ ...source, user_id: user.id })
+        .select().single()
+      if (error) throw error
       sources.value.push(data)
     }
   }
@@ -101,6 +105,8 @@ export const useMissionsStore = defineStore('missions', () => {
     const items = Array.from(doc.querySelectorAll('item, entry'))
     const { data: { user } } = supabase.auth.getUser ? { data: { user: null } } : { data: { user: null } }
 
+    const { data: { user } } = await supabase.auth.getUser()
+
     return items.slice(0, 50).map(item => {
       const get = (tag) => item.querySelector(tag)?.textContent?.trim() || ''
       const title = get('title')
@@ -108,19 +114,18 @@ export const useMissionsStore = defineStore('missions', () => {
       const description = get('description') || get('summary') || get('content')
       const pubDate = get('pubDate') || get('published') || get('updated')
 
-      // Extract skills from title + description
       const techKeywords = ['Vue', 'React', 'Angular', 'Node', 'Python', 'Laravel', 'PHP', 'TypeScript',
         'JavaScript', 'Java', 'C#', '.NET', 'DevOps', 'Docker', 'AWS', 'SQL', 'PostgreSQL',
         'MongoDB', 'GraphQL', 'REST', 'API', 'Mobile', 'Flutter', 'Swift', 'Kotlin', 'Nuxt', 'Next']
       const text = (title + ' ' + description).toLowerCase()
       const skills = techKeywords.filter(k => text.includes(k.toLowerCase()))
 
-      // Extract budget hints
       const budgetMatch = text.match(/(\d{3,4})\s*[€$]?\s*\/?(?:jour|day|j\.?)/i)
       const budget_min = budgetMatch ? parseInt(budgetMatch[1]) * 0.9 : null
       const budget_max = budgetMatch ? parseInt(budgetMatch[1]) * 1.1 : null
 
       return {
+        user_id: user.id,
         source_id: source.id,
         platform: source.platform,
         title: title.slice(0, 200),
@@ -143,8 +148,9 @@ export const useMissionsStore = defineStore('missions', () => {
   }
 
   async function savePreferences(prefs) {
+    const { data: { user } } = await supabase.auth.getUser()
     const { data } = await supabase.from('mission_preferences')
-      .upsert({ ...prefs, updated_at: new Date().toISOString() })
+      .upsert({ ...prefs, user_id: user.id, updated_at: new Date().toISOString() })
       .select().single()
     preferences.value = data
   }
