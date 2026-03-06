@@ -69,7 +69,8 @@ export const useMissionsStore = defineStore('missions', () => {
       const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(source.feed_url)}`
       const resp = await fetch(proxyUrl)
       const text = await resp.text()
-      const items = parseRSS(text, source)
+      const { data: { user } } = await supabase.auth.getUser()
+      const items = parseRSS(text, source, user.id)
 
       // Upsert missions (ignore duplicates via unique constraint)
       let inserted = 0
@@ -99,13 +100,10 @@ export const useMissionsStore = defineStore('missions', () => {
     return total
   }
 
-  function parseRSS(xml, source) {
+  function parseRSS(xml, source, userId) {
     const parser = new DOMParser()
     const doc = parser.parseFromString(xml, 'text/xml')
     const items = Array.from(doc.querySelectorAll('item, entry'))
-    const { data: { user } } = supabase.auth.getUser ? { data: { user: null } } : { data: { user: null } }
-
-    const { data: { user } } = await supabase.auth.getUser()
 
     return items.slice(0, 50).map(item => {
       const get = (tag) => item.querySelector(tag)?.textContent?.trim() || ''
@@ -125,7 +123,7 @@ export const useMissionsStore = defineStore('missions', () => {
       const budget_max = budgetMatch ? parseInt(budgetMatch[1]) * 1.1 : null
 
       return {
-        user_id: user.id,
+        user_id: userId,
         source_id: source.id,
         platform: source.platform,
         title: title.slice(0, 200),
