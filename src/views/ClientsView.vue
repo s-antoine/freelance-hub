@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8">
+  <div class="p-4 md:p-8">
     <div class="flex items-center justify-between mb-8">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Clients</h1>

@@ -7,6 +7,18 @@ body {
   background-color: #f9fafb;
   color: #111827;
   margin: 0;
+  -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu sur tap mobile */
+}
+
+/* Améliore le scroll sur iOS */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Cibles tactiles minimales pour les boutons (44px recommandé Apple) */
+button {
+  min-height: 44px;
 }
 
 /* Utility classes for components */

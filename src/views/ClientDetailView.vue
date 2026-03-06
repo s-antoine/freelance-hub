@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8">
+  <div class="p-4 md:p-8">
     <div class="flex items-center gap-4 mb-8">
       <button @click="router.back()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
         <ArrowLeftIcon class="w-5 h-5 text-gray-600" />

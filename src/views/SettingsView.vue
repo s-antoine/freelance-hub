@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8 max-w-2xl">
+  <div class="p-4 md:p-8 max-w-2xl">
     <div class="mb-8">
       <h1 class="text-2xl font-bold text-gray-900">Paramètres</h1>
       <p class="text-gray-500 mt-1">Informations de votre entreprise</p>
