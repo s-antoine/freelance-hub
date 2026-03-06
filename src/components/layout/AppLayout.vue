@@ -162,6 +162,7 @@ const navItems = [
   { to: '/invoices', label: 'Factures', emoji: '🧾' },
   { to: '/accounting', label: 'Comptabilité', emoji: '💰' },
   { to: '/finance', label: 'Finance', emoji: '💹' },
+  { to: '/missions', label: 'Missions', emoji: '🎯' },
   { to: '/time-tracking', label: 'Time Tracking', emoji: '⏱️' },
   { to: '/tickets', label: 'Tickets', emoji: '🎫' },
   { to: '/settings', label: 'Paramètres', emoji: '⚙️' },
